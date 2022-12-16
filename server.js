@@ -1,21 +1,33 @@
+import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import cors from "cors";
+import mongoose from "mongoose";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
-
+mongoose.set("strictQuery", true);
 dotenv.config();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// middleware
+//* middleware
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
+//* Connect-Mongodb
+const connect = async () => {
+	try {
+		await mongoose.connect(process.env.MONGODB_URI);
+		console.log("Connected to mongoDB.");
+	} catch (error) {
+		throw error;
+	}
+};
+
 app.listen(port, () => {
-	console.log(`Server listening on port ${port}`);
+	connect();
+	console.log("Connected to backend.");
 });
