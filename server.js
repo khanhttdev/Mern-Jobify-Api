@@ -4,6 +4,8 @@ import express from "express";
 import mongoose from "mongoose";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import notFoundMiddleware from "./middleware/not-found.js";
+import authRouter from "./routes/authRoutes.js";
+import jobsRouter from "./routes/jobsRoutes.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -14,8 +16,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //* middleware
-app.use(notFoundMiddleware);
+// app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
+
+//* Router
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/jobs", jobsRouter);
 
 //* Connect-Mongodb
 const connect = async () => {
