@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 import validator from "validator";
+import bcrypt from "bcryptjs";
 
 const UserSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: [true, "Please provide a name"],
-		minLength: 3,
-		maxLength: 20,
+		minlength: 3,
+		maxlength: 20,
 		trim: true,
 	},
 	email: {
@@ -27,14 +28,20 @@ const UserSchema = new mongoose.Schema({
 	lastName: {
 		type: String,
 		trim: true,
-		maxLength: 20,
+		maxlength: 20,
 		default: "lastName",
 	},
 	location: {
 		type: String,
 		trim: true,
-		maxLength: 20,
+		maxlength: 20,
 		default: "my city",
 	},
+});
+
+UserSchema.pre("save", async function () {
+	if (!this.isModified("password")) return;
+	const salt = await bcrypt.genSalt(10);
+	this.password = await bcrypt.hash(this.password, salt);
 });
 export default mongoose.model("User", UserSchema);
