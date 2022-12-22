@@ -15,7 +15,6 @@ app.use(cors());
 app.use(express.json());
 
 //* middleware
-// app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
 //* Router
