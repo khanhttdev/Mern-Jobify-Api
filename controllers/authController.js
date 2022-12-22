@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import User from "../models/User.js";
 import { BadRequestError } from "../errors/index.js";
+import User from "../models/User.js";
 
 const register = async (req, res, next) => {
 	const { name, email, password } = req.body;
@@ -13,8 +13,18 @@ const register = async (req, res, next) => {
 	}
 
 	const user = await User.create({ name, email, password });
+	const token = user.createJWT();
 
-	return res.status(StatusCodes.CREATED).json({ user });
+	res.status(StatusCodes.CREATED).json({
+		user: {
+			email: user.email,
+			lastName: user.lastName,
+			location: user.location,
+			name: user.name,
+		},
+		token,
+		location: user.location,
+	});
 };
 const login = async (req, res, next) => {
 	res.send("login User");
