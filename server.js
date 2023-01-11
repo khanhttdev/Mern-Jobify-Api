@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 import "express-async-errors";
 import mongoose from "mongoose";
+import morgan from "morgan";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import authRouter from "./routes/authRoutes.js";
 import jobsRouter from "./routes/jobsRoutes.js";
@@ -16,6 +17,10 @@ app.use(express.json());
 
 //* middleware
 app.use(errorHandlerMiddleware);
+
+if (process.env.NODE_ENV !== "production") {
+	app.use(morgan("dev"));
+}
 
 //* Router
 app.use("/api/v1/auth", authRouter);
